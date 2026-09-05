@@ -29,18 +29,33 @@ https://itunes.apple.com/{country}/rss/customerreviews/page={n}/id={appId}/sortb
 
 Pages go from 1 to 10, fifty reviews each, so five hundred per country is the ceiling. If you need more, walk the countries the app actually sells in rather than trying to page past ten.
 
-Each entry gives `im:rating`, `im:version`, `title`, `content`, `author` and `updated`. Reviews only appear here once Apple has surfaced them, so the newest day or two is usually thin. Do not treat that as a drop in review volume.
+Each entry gives `im:rating`, `im:version`, `title`, `content`, `author` and `updated`.
+
+**`im:version` is a trap.** It reports the app's current version, not the version the reviewer was running. Every review in a fetch will carry the same value. Never build a regression story on it, and never present it as the version the user was on.
+
+To find when a problem started, use `updated` instead and look at how a cluster's share of negative reviews moves week over week. That needs several fetches over time, so on a first run say plainly that you cannot date the onset yet.
+
+Reviews only appear here once Apple has surfaced them, so the newest day or two is usually thin. Do not treat that as a drop in review volume.
+
+On a busy app, 200 recent reviews can span a single day. Say what date range you actually got. A one day window describes today's mood, not a trend.
 
 If a page returns an empty `feed.entry`, the app has no reviews in that storefront. Say so and move to the next country rather than reporting zero overall.
 
 ## Step 2. Separate signal from noise
 
 Discard, but count:
-- Reviews with no text
-- Reviews about price alone, with no other complaint
+- Reviews with no text, or under about fifteen characters
 - Reviews that are clearly about a different app
 
-Report the counts. A wall of "too expensive" with nothing else is itself a finding, and it is not a bug.
+Separate, do not discard:
+
+**Monetisation complaints.** Ad load, paywalled features, price. These will often be the largest cluster and none of them are bugs. Report them as one line with a count and move on. Do not let them occupy slots in the ranked backlog, and never write them as engineering tasks.
+
+**Content and brand complaints.** Objections to the company's own advertising, politics, or public behaviour. Real signal, wrong department. One line, counted, then out.
+
+Also check the rating against the text before trusting either. One star reviews with glowing text are common, and so is the reverse. When they disagree, believe the text and note how many you found. If that number is high, every rating based split in this report is unreliable and you should say so.
+
+Report all the counts. A wall of "too expensive" is a finding. It is not a backlog.
 
 ## Step 3. Cluster the complaints
 

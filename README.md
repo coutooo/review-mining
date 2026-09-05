@@ -5,7 +5,7 @@ Your users already wrote your roadmap. It's sitting in your reviews, unsorted.
 Point this at an app and it comes back with:
 
 - The complaints clustered by cause, not by wording
-- Which app version each problem started at
+- Monetisation gripes separated out, so ad complaints don't drown the real bugs
 - A ranking by revenue at risk, not by how loud people were
 - The top ten written as tasks an agent can implement cold
 - A reply list, because replying to fixed reviews is the cheapest rating recovery there is
