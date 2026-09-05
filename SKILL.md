@@ -17,6 +17,22 @@ Keep for each: rating, date, app version, country, and the text.
 
 If you were given an App Store link, use it. If you were given a bundle id, resolve it first. Do not proceed on a guess about which app this is.
 
+### Where the reviews come from
+
+Apple exposes reviews as public JSON. No key, no auth.
+
+```
+https://itunes.apple.com/{country}/rss/customerreviews/page={n}/id={appId}/sortby=mostrecent/json
+```
+
+`{appId}` is the digits after `id` in the App Store URL. `{country}` is a two letter code, lowercase, `us` by default.
+
+Pages go from 1 to 10, fifty reviews each, so five hundred per country is the ceiling. If you need more, walk the countries the app actually sells in rather than trying to page past ten.
+
+Each entry gives `im:rating`, `im:version`, `title`, `content`, `author` and `updated`. Reviews only appear here once Apple has surfaced them, so the newest day or two is usually thin. Do not treat that as a drop in review volume.
+
+If a page returns an empty `feed.entry`, the app has no reviews in that storefront. Say so and move to the next country rather than reporting zero overall.
+
 ## Step 2. Separate signal from noise
 
 Discard, but count:
